@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { title } from "process";
 import productModel from '../models/productSchema';
 
 class productController {
 
     //create product
     static create = async (req: Request, res: Response, next: NextFunction) => {
-        const { title, desc, img, categories, size, color, price } = req.body;
+        const { title, desc,categories, size, color,img, price } = req.body;
         try {
 
             const result = await productModel.create(
@@ -29,12 +28,14 @@ class productController {
     static get = async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
         try {
-            const result = await productModel.findOne({ id });
+            const result = await productModel.findById({ id });
             res.status(200).json({ message: 'get product successfull', product : result });
         } catch (error) {
             next(error);
         };
     };
+
+//    static bykategori = async (req: Request, res: Response, next: NextFunction)
 
     //get all product
     static all = async (req: Request, res: Response, next: NextFunction) => {
