@@ -1,3 +1,4 @@
+import console from "console";
 import { NextFunction, Request, Response } from "express";
 import productModel from '../models/productSchema';
 
@@ -5,18 +6,20 @@ class productController {
 
     //create product
     static create = async (req: Request, res: Response, next: NextFunction) => {
-        const { title, desc,categories, size, color,img, price } = req.body;
+        const { title, desc, categories, size, color, price,location} = req.body;
+        const url = req.protocol + "://" + req.get('host');
         try {
 
             const result = await productModel.create(
                 {
-                    title,
-                    desc,
-                    img,
-                    categories,
-                    size,
-                    color,
-                    price
+                    title: title,
+                    desc: desc,
+                    img: url + '/images/' + req.file?.filename,
+                    categories: categories,
+                    size: size,
+                    color: color,
+                    price: price,
+                    location : location,
                 });
             res.status(200).json({ message: 'create successfull', data: result });
         } catch (error) {
@@ -29,18 +32,28 @@ class productController {
         const { id } = req.params;
         try {
             const result = await productModel.findById({ id });
-            res.status(200).json({ message: 'get product successfull', product : result });
+            res.status(200).json({ message: 'get product successfull', product: result });
         } catch (error) {
-            next(error);
+            res.status(401).json({ message: ' your id not found' });
         };
     };
 
-//    static bykategori = async (req: Request, res: Response, next: NextFunction)
+
 
     //get all product
     static all = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const result = await productModel.find();
+            res.status(200).json({ message: 'get all data successfull', data: result })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static byKategori = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const kategori = req.params;
+            const result = await productModel.findOne(kategori)
             res.status(200).json({ message: 'get all data successfull', data: result })
         } catch (error) {
             next(error);
@@ -56,7 +69,7 @@ class productController {
                 {
                     $set: req.body
                 },
-                {   new: true }
+                { new: true }
             );
             res.status(200).json({ message: 'update product successfull', data: result })
         } catch (error) {

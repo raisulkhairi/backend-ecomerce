@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
     size: { type: String },
     color: { type: String },
     price: { type: String, required: true },
+    location :{type : String}
 
 },
     { timestamps: true },

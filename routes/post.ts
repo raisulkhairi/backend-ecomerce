@@ -8,7 +8,7 @@ class  postRouter {
         this.postController()
     }
     postController=()=>{
-        this.postRoute.post("/upload", upload.single("imagePath"), postController.createPost);
+        this.postRoute.post("/upload",postController.createPost);
         this.postRoute.get("get-image", postController.getPosts);
     }
 }

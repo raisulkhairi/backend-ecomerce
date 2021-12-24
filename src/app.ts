@@ -4,6 +4,7 @@ import router from '../routes/router';
 import cors from 'cors';
 import  BodyParser  from "body-parser";
 import { errorHandler } from '../middleware/errorHandler'
+import path from "path";
 
 class App {
     app: Application;
@@ -18,6 +19,7 @@ class App {
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(cors());
         this.app.use(BodyParser.json());
+        this.app.use('/images',express.static(path.join('images')));
         dbConnect.dbConnect()
     }
     router = () => {
